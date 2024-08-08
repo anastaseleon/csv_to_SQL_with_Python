@@ -1,0 +1,2 @@
+[console_scripts]
+run-import = run_import:main

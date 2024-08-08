@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: bank-statement-tool
+Version: 0.1.0
+Summary: A tool for importing bank statements into a JSON file
+Home-page: https://github.com/yourusername/bank_statement_tool
+Author: Your Name
+Author-email: your.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: pandas
+
+# Bank Statement Tool
+
+This is a tool for importing bank statements, categorizing transactions, and calculating totals.

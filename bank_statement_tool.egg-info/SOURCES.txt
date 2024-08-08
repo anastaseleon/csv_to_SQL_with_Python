@@ -1,0 +1,12 @@
+README.md
+setup.py
+bank_statement_tool/__init__.py
+bank_statement_tool/importer.py
+bank_statement_tool/main.py
+bank_statement_tool.egg-info/PKG-INFO
+bank_statement_tool.egg-info/SOURCES.txt
+bank_statement_tool.egg-info/dependency_links.txt
+bank_statement_tool.egg-info/entry_points.txt
+bank_statement_tool.egg-info/requires.txt
+bank_statement_tool.egg-info/top_level.txt
+bank_statement_tool/data/July2024_0646.csv
