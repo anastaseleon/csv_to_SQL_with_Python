@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from bank_statement_tool.importer import import_statement
+from tools.importer import import_statement
 import os
-from .database import get_db_connection  # Import the database connection utility
+from models.database import get_db_connection  # Import the database connection utility
 
 bp = Blueprint('import_routes', __name__)
 

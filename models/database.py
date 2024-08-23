@@ -3,10 +3,10 @@ import os
 
 def get_db_connection():
     try:
-        server = os.getenv('SERVER')
+        server = 'louverture'
         database = 'App'
-        username = os.getenv('USERNAME')
-        password = os.getenv('PASSWORD')
+        username ='app_user'
+        password = 'password'
 
         conn = pyodbc.connect(
             f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
