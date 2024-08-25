@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions App</title>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body>
+    <div x-data="appData()" x-init="fetchData()">
+        <h1>Uploaded Files</h1>
+        <div x-show="loadingFiles">Loading files...</div>
+        <ul>
+            <template x-for="file in uploadedFiles" :key="file.filename">
+                <li>
+                    <strong>File:</strong> <span x-text="file.filename"></span> - 
+                    <strong>Ratio:</strong> <span x-text="file.ratio + '%'"></span>
+                </li>
+            </template>
+        </ul>
+
+        <h1>Uncategorized Transactions</h1>
+        <div x-show="loadingTransactions">Loading transactions...</div>
+        <ul>
+            <template x-for="transaction in uncategorizedTransactions" :key="transaction.id">
+                <li>
+                    <strong>ID:</strong> <span x-text="transaction.id"></span> - 
+                    <strong>Payee:</strong> <span x-text="transaction.Payee"></span> - 
+                    <strong>Amount:</strong> <span x-text="transaction.Amount"></span> - 
+                    <strong>Date:</strong> <span x-text="transaction['Posted Date']"></span>
+                    <div>
+                        <label for="category">Category:</label>
+                        <select x-model="transaction.selectedCategory">
+                            <option value="Didi" selected>Didi</option>
+                            <option value="Kiki">Kiki</option>
+                            <option value="Both">Both</option>
+                        </select>
+                        <button @click="categorizeTransaction(transaction)">Categorize</button>
+                    </div>
+                </li>
+            </template>
+        </ul>
+
+        <div x-show="message" x-text="message" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        function appData() {
+            return {
+                uploadedFiles: [],
+                uncategorizedTransactions: [],
+                loadingFiles: false,
+                loadingTransactions: false,
+                message: '',
+
+                fetchData() {
+                    this.loadingFiles = true;
+                    this.loadingTransactions = true;
+
+                    // Fetch uploaded files
+                    fetch('/uploaded_files')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.uploadedFiles = data;
+                            this.loadingFiles = false;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching files:', error);
+                            this.loadingFiles = false;
+                        });
+
+                    // Fetch uncategorized transactions
+                    fetch('/transactions/uncategorized')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.uncategorizedTransactions = data.map(transaction => ({
+                                ...transaction,
+                                selectedCategory: 'Didi'  // Set 'Didi' as the default selected category
+                            }));
+                            this.loadingTransactions = false;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching transactions:', error);
+                            this.loadingTransactions = false;
+                        });
+                },
+
+                categorizeTransaction(transaction) {
+                    // No need to check if a category is selected, since 'Didi' is always selected by default
+
+                    fetch('/transactions/categorize', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id: transaction.id,
+                            category: transaction.selectedCategory,
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.message = data.message;
+                        // Optionally, remove or update the transaction in the list
+                        this.uncategorizedTransactions = this.uncategorizedTransactions.filter(t => t.id !== transaction.id);
+                    })
+                    .catch(error => {
+                        console.error('Error categorizing transaction:', error);
+                        this.message = 'Failed to categorize transaction.';
+                    });
+                }
+            };
+        }
+    </script>
+</body>
+</html>
